@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <script>
+        function pressbutton(a) {
+    document.getElementById('Q1').style.display="none";
+    document.getElementById('Q2').style.display="none";
+    document.getElementById(a).style.display="block";
+        }
+    </script>
+    </head>
+    <body>
+        <center>
+            <br><br>
+            <table border="1" width="400">
+                <tr align="center">
+                <td>
+                    <div id="Q1" style="display: none;">
+                    <img src="coke.png" width="300"></div>
+                    <div id="Q2" style="display: block;">
+                        <img src="coffee.png" width="300"></div>
+                </td>
+                </tr>
+                <tr>
+                <td align="center">
+                <a href="javascript:pressbutton('Q1')">Coke</a>
+                <a href="javascript:pressbutton('Q2')">Coffee</a>
+                </td>    
+                </tr>
+            </table>
+        </center>
+
+    </body>
+
+</html>
