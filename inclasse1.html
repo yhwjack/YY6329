@@ -1,0 +1,49 @@
+<html>
+<head>
+	<style>
+		
+		td{
+			width:200px;
+			text-align:center;
+		}
+	
+		</style>
+	</head>
+	<body>
+		<table style="border-style: solid;border-width:1px">
+			<tr>
+				<td>Drink <br/><a href="javascript:showPrice_d('coffee')" >Coffee </a> | <a href="javascript:showPrice_d('coke')" >Coke</a></td>
+				<td style="border-right-style: hidden;"><img id="drinkpic" src="coffee.png" width="150" height="150"></td>
+				<td style="border-left-style: hidden;"> $<span id="drink_price">2</span></td>
+			</tr>
+				<td>Food <br/><a href="javascript:showPrice_f('sandwich')" >Sandwich </a> | <a href="javascript:showPrice_f('green-salad')" >Green-salad</a></td>
+				<td style="border-right-style: hidden;"><img id="foodpic" src="sandwich.png" width="150" height="150"> </td>
+				<td style="border-left-style: hidden;"> $<span id="food_price">3</span></td>
+			</tr>
+			
+			</table>
+			
+			
+			<script>
+				function showPrice_d(filename){
+					var price;
+					
+					document.getElementById("drinkpic").src=filename+".png";
+					if (filename=="coffee")
+						 price =2;
+					else price = 1;
+					document.getElementById("drink_price").innerHTML=price;
+					
+					
+				}
+				function showPrice_f(filename){
+					document.getElementById("foodpic").src=filename+".png";
+					if (filename=="sandwich")
+						 price =3;
+					else price = 4;
+					document.getElementById("food_price").innerHTML=price;
+				}				
+				
+			</script>
+	</body>
+</html>
