@@ -1,0 +1,105 @@
+<head>
+    <!-- Include Handsfree.js -->
+    <link rel="stylesheet" href="https://unpkg.com/handsfree@8.5.1/build/lib/assets/handsfree.css" />
+    <script src="https://unpkg.com/handsfree@8.5.1/build/lib/handsfree.js"></script>
+  </head>
+   
+  <body>
+    <canvas style="display: block;position: absolute;left:0;top:0;z-index:1" id="rect" width="1280" height="720"></canvas>
+    <img id="tea" src="tea.png" style="display: none;">
+    <img id="coffee" src="coffee.png" style="display: none;">
+    <img id="cart" src="cart.svg" style="display: none;">
+    <!-- Instantiate and start it -->
+    <script>
+      var ctx = document.querySelector("#rect").getContext("2d");
+      // var rect = { color: 'green', left: 1000, top : 100, width: 200, height: 200 }
+      var tea = { left : 1000, top : 50, width: 180, height: 160 }
+      var coffee = { left : 700, top : 50, width: 180, height: 160 }
+      var cart = { left : 900, top : 510, width: 220, height: 190 }
+
+      var pick_tea = false
+      var pick_coffee = false
+
+      var cost = 0
+
+      var handsfree = new Handsfree({hands: true, showDebug: true})
+
+      function detected (finger1, rect, exec) {
+        if (finger1.x > rect.left && finger1.x < (rect.left + rect.width) && finger1.y > rect.top && finger1.y < rect.top + rect.height) {
+          exec()
+        }
+      }
+
+      ctx.font = "bold 58px serif"
+      ctx.fillStyle = "green"
+      // handsfree.enablePlugins('browser')
+      handsfree.use('mainloop', {
+        onFrame (data) {
+          ctx.clearRect(0, 0, 1280, 720)
+          ctx.drawImage(document.getElementById('tea'), 1000, 50, 180, 160)
+          ctx.drawImage(document.getElementById('coffee'), 700, 50, 180, 160)
+          ctx.drawImage(document.getElementById('cart'), 900, 510, 220, 190)
+          ctx.fillText("$ " + cost, 950, 520)
+          if (data.hands.landmarksVisible[0]) {
+            // left hand or right hand is pinching.
+            pinch = handsfree.data.hands.pinchState[1][0] || handsfree.data.hands.pinchState[0][0]
+            finger1 = { x : 1280 - data.hands.landmarks[0][8].x * 1280 , y : data.hands.landmarks[0][8].y * 720}
+            // finger2 = { x : 1280 - data.hands.landmarks[0][4].x * 1280 , y : data.hands.landmarks[0][4].y * 720}
+
+            detected(finger1, tea, () => {
+              if (pinch) {
+                pick_tea = true;
+              }
+            })
+            detected(finger1, coffee, () => {
+              if (pinch) {
+                pick_coffee = true;
+              }
+            })
+            detected(finger1, cart, () => {
+              if (!pinch) {
+                if (pick_tea) {
+                  cost += 5
+                  pick_tea = false;
+                }
+                if (pick_coffee) {
+                  cost += 10
+                  pick_coffee = false;
+                }
+              }
+            })
+            if (!pinch) {
+              pick_tea = false;
+              pick_coffee = false;
+            }
+            // if (finger1.x > rect.left && finger1.x < (rect.left + rect.width) && finger1.y > rect.top && finger1.y < rect.top + rect.height) {
+            //   if (pinch) {
+            //     rect.color = 'red'
+            //     rect.left = finger1.x - rect.width / 2;
+            //     rect.top = finger1.y - rect.height / 2;
+            //   } else {
+            //     rect.color = 'green'
+            //   }
+            // } else {
+            //   rect.color = 'green'
+            // }
+            // ctx.fillstyle = 'red'
+            // if (data.hands.landmarks) {
+            //   ctx.fillRect(finger1.x, finger1.y, 10, 10)
+            //   ctx.fillRect(finger2.x, finger2.y, 10, 10)
+            // }
+            if (pick_tea) {
+              ctx.drawImage(document.getElementById('tea'), finger1.x - 90, finger1.y - 80, 180, 160)
+            }
+            if (pick_coffee ) {
+              ctx.drawImage(document.getElementById('coffee'), finger1.x - 90, finger1.y - 80, 180, 160)
+            }
+          }
+
+          // ctx.fillStyle = rect.color
+          // ctx.fillRect(rect.left, rect.top, rect.width, rect.height)
+        }
+      })
+      handsfree.start()
+    </script>
+  </body>
